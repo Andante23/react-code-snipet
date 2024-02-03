@@ -12,19 +12,24 @@ import {
   StCardItemTable,
 } from "./style/localStyle";
 import { Reset } from "styled-reset";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   // userIdea ,userPw : 각각 사용자이름 , 사용자 비밀번호 를 저장하는 state 변수
   const [inputTopic, setInputTopic] = useState("");
   const [inputText, setInputText] = useState("");
 
-  // 더미데이터가 들어간 inputData
+  // inputData안에는  localStorage "키" 에 존재하는 값을 저장
   const [inputData, setInputData] = useState(
-    JSON.parse(localStorage.getItem("todoList")) || []
+    JSON.parse(localStorage.getItem("data")) || []
   );
 
+  // localStorage와 리액트의 상태를 동기화하기 위해서....
   useEffect(() => {
-    localStorage.setItem("todoList", JSON.stringify(inputData));
+    // localStorage에 저장할때는 문자열화해서 저장해야 합니다.
+    localStorage.setItem("data", JSON.stringify(inputData));
+
+    // 상태 변경에따라 저장되도록 의존선 배열에 값을  inputData 지정
   }, [inputData]);
 
   /*  
@@ -59,7 +64,7 @@ function App() {
     }
 
     const newData = {
-      id: inputData.length + 1,
+      id: uuidv4(),
       topic: inputTopic,
       text: inputText,
     };
@@ -75,6 +80,7 @@ function App() {
 
   return (
     <>
+      {/* reset.css 의 역활을 한다고 보시면 됩니다.  */}
       <Reset />
       <StSubmitForm>
         <StInputTopic
